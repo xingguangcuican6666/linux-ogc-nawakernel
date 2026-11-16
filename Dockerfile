@@ -15,8 +15,9 @@ RUN pacman -Sy --noconfirm --needed base-devel sudo && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder && \
     chmod 0440 /etc/sudoers.d/builder && \
     chown -R builder:builder /work
-USER builder
+
 RUN chmod +x /work/scripts/*.sh
 RUN pacman -Syuu --noconfirm base-devel git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar wget xz zstd openssl
 RUN chmod 777 /work -Rv
+USER builder
 ENTRYPOINT ["/work/scripts/build.sh"]
