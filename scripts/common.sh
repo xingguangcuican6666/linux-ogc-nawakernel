@@ -2,7 +2,7 @@
 
 clone_repo_latest() {
     rm -rvf "$2" || true
-    git clone "$1" --verbose "$$2"
+    git clone "$1" --verbose "$2"
     Latest_tag=$(git --no-pager -C "$2" tag | tail -n 1)
     git -C "$2" checkout "$Latest_tag" --force
 }
