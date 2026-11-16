@@ -46,7 +46,8 @@ download_source() {
 }
 
 inject_config() {
-    local config="$1"
+    local config="${1//\\/\\\\}"
+    config="${config//$'\n'/\\$'\n'}"
     sed -i "/make olddefconfig/i\\${config}" "$2/arch/PKGBUILD"
 }
 
