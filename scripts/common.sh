@@ -25,6 +25,7 @@ patch_pkgbuild() {
 }
 
 download_source() {
+    set +e
     target="$1/arch/linux-${VERSION}.tar.xz"
     wget -O "$target" "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-${VERSION}.tar.xz"
     if [[ "$?" != 0 ]]; then
@@ -36,6 +37,7 @@ download_source() {
         download_source "$target"
     fi;
     RETRY=3
+    set -e
 }
 
 inject_config() {
