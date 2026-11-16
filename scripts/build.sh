@@ -27,6 +27,6 @@ clone_repo_latest "$REPO" "$SOURCE_DIR"
 patch_pkgbuild "$SOURCE_DIR"
 download_source "$SOURCE_DIR"
 inject_config "$CONFIG_TEXT" "$SOURCE_DIR"
-start-build "$SOURCE_DIR" "$CACHE_DIR" "$OUT_DIR"
+start_build "$SOURCE_DIR" "$CACHE_DIR" "$OUT_DIR"
 
 # echo "$@"
