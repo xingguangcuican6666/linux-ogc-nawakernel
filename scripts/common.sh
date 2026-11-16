@@ -26,6 +26,11 @@ patch_pkgbuild() {
 
 download_source() {
     set +e
+    Latest_tag=$(git --no-pager -C "$2" tag | tail -n 1)
+    # git -C "$2" checkout "$Latest_tag" --force
+    formatted=$(printf '%s\n' "$Latest_tag" | sed 's/^v//; s/-/./')
+    # echo "$formatted"
+    VERSION=$(printf '%s\n' "$Latest_tag" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
     target="$1/arch/linux-${VERSION}.tar.xz"
     wget -O "$target" "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-${VERSION}.tar.xz"
     if [[ "$?" != 0 ]]; then
