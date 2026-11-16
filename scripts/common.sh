@@ -8,7 +8,7 @@ clone_repo_latest() {
 }
 
 patch_pkgbuild() {
-    Latest_tag=$(git --no-pager -C "$2" tag | tail -n 1)
+    Latest_tag=$(git --no-pager -C "$1" tag | tail -n 1)
     # git -C "$2" checkout "$Latest_tag" --force
     formatted=$(printf '%s\n' "$Latest_tag" | sed 's/^v//; s/-/./')
     # echo "$formatted"
