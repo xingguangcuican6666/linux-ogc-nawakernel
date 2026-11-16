@@ -32,6 +32,8 @@ jobs:
             
             - name: Run kernel build
               run: |
+                mkdir -p "$PWD/out"
+                chmod 777 -R "$PWD/out"
                 docker run --rm \
                     -e SECRET_SKEY="${{ secrets.SECRET_SKEY }}" \
                     -v "$PWD/out:/work/out" \
