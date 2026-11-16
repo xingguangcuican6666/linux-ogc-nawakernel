@@ -10,7 +10,11 @@ RUN mkdir -p /work/cache/packages
 RUN mkdir -p /work/out
 COPY scripts/ /work/scripts
 COPY patchs/ /work/patchs
+RUN useradd -m builder && \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+
+USER builder
 RUN chmod +x /work/scripts/*.sh
 RUN pacman -Syuu --noconfirm base-devel git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar wget xz zstd openssl
-
+RUN chmod 777 /work -Rv
 ENTRYPOINT ["/work/scripts/build.sh"]
