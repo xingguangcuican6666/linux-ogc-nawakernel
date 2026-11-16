@@ -11,6 +11,6 @@ RUN mkdir -p /work/out
 COPY scripts/ /work/scripts
 COPY patchs/ /work/patchs
 RUN chmod +x /work/scripts/*.sh
-RUN pacman -Syuu --noconfirm base-devel git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar xz zstd openssl
+RUN pacman -Syuu --noconfirm base-devel git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar wget xz zstd openssl
 
 ENTRYPOINT ["/work/scripts/build.sh"]
