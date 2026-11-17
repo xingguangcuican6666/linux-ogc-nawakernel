@@ -12,6 +12,7 @@ patch_pkgbuild() {
     # git -C "$2" checkout "$Latest_tag" --force
     formatted=$(printf '%s\n' "$Latest_tag" | sed 's/^v//; s/-/./')
     # echo "$formatted"
+    wget -O "$1/arch/monolithic.patch" "https://github.com/OpenGamingCollective/linux/releases/download/v${formatted}/monolithic.patch"
     version=$(printf '%s\n' "$Latest_tag" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
     sed -i "s/@@OGC_VERSION@@/$formatted/g" "$1/arch/PKGBUILD"
     sed -i "s/@@BUILDNUM@@/2/g" "$1/arch/PKGBUILD"
@@ -42,6 +43,14 @@ download_source() {
         download_source "$target"
     fi;
     RETRY=3
+    #sudo pacman -Sw --cachedir 
+    (
+	    TEMP_N=$(mktemp -d)
+	    cd "$TEMP_N"
+	    sudo pacman -Sw --cachedir ./ linux-headers
+	    CONFIGT=$(find . -type f -name .config)
+	    cp -rvf "$CONFIGT" "$1/arch/"
+    )
     set -e
 }
 
@@ -49,6 +58,14 @@ inject_config() {
     local config="${1//\\/\\\\}"
     config="${config//$'\n'/\\$'\n'}"
     sed -i "/make olddefconfig/i\\${config}" "$2/arch/PKGBUILD"
+    grep -vE '^\s*(#|$)' "$2/config/ogc.config.set" >> "$2/arch/.config"
+    for f in "$2/config/arch.config.set" "$2/config/ogc.config.set"; do
+	[ -f "$f" ] && grep -vE '^\s*(#|$)' "$f" >> "$2/arch/.config"
+    done
+    for f in "$2/config/arch.config.unset" "$2/config/ogc.config.unset"; do
+	[ -f "$f" ] && grep -vE '^\s*(#|$)' "$f" | sed -E 's/^[[:space:]]*(CONFIG_[A-Za-z0-9_]+).*/# \1 is not set/' >> "$2/arch/.config"
+    done
+    cp "$2/arch/.config" "$2/arch/config"
 }
 
 start_build() {
@@ -57,7 +74,7 @@ start_build() {
         SRCDEST="$2/sources" \
             BUILDDIR="$2/build" \
             PKGDEST="$2/packages" \
-            makepkg -sf --noconfirm
+            makepkg -sf --noconfirm --skippgpcheck --skipchecksums --skipinteg
     ) || return 1
 
     mkdir -p "$3/rej/"
