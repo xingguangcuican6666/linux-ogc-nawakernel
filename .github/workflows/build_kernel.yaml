@@ -37,7 +37,9 @@ jobs:
                 docker run --rm \
                     -e SECRET_SKEY="${{ secrets.SECRET_SKEY }}" \
                     -v "$PWD/out:/work/out" \
-                    ghcr.io/${{ github.repository_owner }}/nawakernel-builder:latest
+                    -v "$PWD/scripts:/work/scripts:ro" \
+                    -v "$PWD/patchs:/work/patchs:ro" \
+                    "$IMAGE"
             
             - name: Upload kernel packages
               uses: actions/upload-artifact@v4
