@@ -12,7 +12,7 @@ patch_pkgbuild() {
     # git -C "$2" checkout "$Latest_tag" --force
     formatted=$(printf '%s\n' "$Latest_tag" | sed 's/^v//; s/-/./')
     # echo "$formatted"
-    wget -O "$1/arch/monolithic.patch" "https://github.com/OpenGamingCollective/linux/releases/download/v${Latest_tag}/monolithic.patch"
+    wget -O "$1/arch/monolithic.patch" "https://github.com/OpenGamingCollective/linux/releases/download/${Latest_tag}/monolithic.patch"
     version=$(printf '%s\n' "$Latest_tag" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
     sed -i "s/@@OGC_VERSION@@/$formatted/g" "$1/arch/PKGBUILD"
     sed -i "s/@@BUILDNUM@@/2/g" "$1/arch/PKGBUILD"
