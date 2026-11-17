@@ -74,7 +74,7 @@ start_build() {
         SRCDEST="$2/sources" \
             BUILDDIR="$2/build" \
             PKGDEST="$2/packages" \
-	    MAKEFLAGS="-j"(nproc) \
+	    MAKEFLAGS="-j$(nproc)" \
             makepkg -sf --noconfirm --skippgpcheck --skipchecksums --skipinteg
     ) || return 1
 
