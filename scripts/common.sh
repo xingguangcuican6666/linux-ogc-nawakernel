@@ -42,15 +42,16 @@ download_source() {
         fi
     done
     (
-        local temp_n pkg
-        temp_n=$(mktemp -d)
+        local temp_n pkg url
+        temp_n=$(mktemp -d) || exit 1
         cd "$temp_n" || exit 1
-        sudo pacman -Sw --noconfirm --cachedir ./ linux-headers
-        pkg=$(find . -type f -name 'linux-headers-*.pkg.tar.zst' | head -n 1)
-        if [[ -z "$pkg" ]]; then
-            echo "Failed to download linux-headers package" >&2
+        url=$(pacman -Sp --print-format '%l' linux-headers 2>/dev/null | grep -m1 '/linux-headers-[^/]*\.pkg\.tar\.zst$')
+        if [[ -z "$url" ]]; then
+            echo "Cannot resolve linux-headers package URL" >&2
             exit 1
         fi
+        pkg="./$(basename "$url")"
+        wget -O "$pkg" "$url" || exit 1
         bsdtar -xOf "$pkg" 'usr/lib/modules/*/build/.config' > "$1/arch/base.config"
         local hver
         hver=$(basename "$pkg" | sed -E 's/^linux-headers-([0-9.]+)\..*/\1/')
