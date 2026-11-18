@@ -95,14 +95,23 @@ set_mirrorlist() {
 	sudo reflector --sort rate --threads 100 --save /etc/pacman.d/mirrorlist || true
 }
 
+config_ccache() {
+	ccache --max-size="$1"
+}
+
 start_build() {
     local rc=0
     (
         cd "$1/arch" || exit 1
+		export USE_CCACHE=1
+		export CCACHE_DIR="$HOME/.ccache"
+		export CC="ccache gcc"
+		export CXX="ccache g++"
+		export PATH="/usr/lib/ccache:$PATH"
         SRCDEST="$2/sources" \
             BUILDDIR="$2/build" \
             PKGDEST="$2/packages" \
-	    MAKEFLAGS="-j$(nproc)" \
+	    	MAKEFLAGS="-j$(nproc)" \
             makepkg -sf --noconfirm --skippgpcheck --skipchecksums --skipinteg
     ) || rc=$?
 
