@@ -28,6 +28,7 @@ patch_pkgbuild "$SOURCE_DIR"
 download_source "$SOURCE_DIR"
 inject_config "$CONFIG_TEXT" "$SOURCE_DIR"
 set_mirrorlist
+config_ccache "20G"
 start_build "$SOURCE_DIR" "$CACHE_DIR" "$OUT_DIR"
 
 # echo "$@"
