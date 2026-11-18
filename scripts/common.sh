@@ -90,6 +90,11 @@ inject_config() {
     sed -i "/make olddefconfig/i\\${config}" "$2/arch/PKGBUILD"
 }
 
+set_mirrorlist() {
+	echo ::Sync rate mirrorlist
+	sudo reflector --sort rate --threads 100 --save /etc/pacman.d/mirrorlist || true
+}
+
 start_build() {
     local rc=0
     (
