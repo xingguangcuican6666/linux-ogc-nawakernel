@@ -13,7 +13,7 @@ RUN pacman -Sy --noconfirm --needed base-devel reflector sudo && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder && \
     chmod 0440 /etc/sudoers.d/builder
 RUN reflector --sort rate --threads 100 --save /etc/pacman.d/mirrorlist
-RUN pacman -Syuu --noconfirm base-devel git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar wget xz zstd openssl
+RUN pacman -Syuu --noconfirm base-devel ccache git bc cpio gettext libelf pahole perl python rust rust-bindgen rust-src tar wget xz zstd openssl
 RUN chmod 777 /work -Rv
 USER builder
 WORKDIR /work
